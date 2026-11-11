@@ -1,0 +1,10 @@
+[project]
+name = "cpu-3dgs-platform"
+version = "0.1.0"
+description = "CPU-Only Incremental 3D Gaussian Splatting Reconstruction Platform"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
