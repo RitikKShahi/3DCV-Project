@@ -126,3 +126,6 @@ Measured on an 8-core Apple Silicon CPU (8 GB RAM, Python 3.11, PyTorch 2.15.0 C
 | **Object Orbit** | 320×240 | 12 | 12 / 12 | 1,094 | `pycolmap` | 18.03 dB | 162.9s (~2.7 min) | 567.0 MB |
 | **Indoor Corner** | 320×240 | 12 | 12 / 12 | 1,492 | `pycolmap` | 18.78 dB | 173.1s (~2.9 min) | 683.1 MB |
 | **Outdoor Facade** | 320×240 | 12 | 12 / 12 | 1,239 | `pycolmap` | 18.62 dB | 170.4s (~2.8 min) | 698.5 MB |
+
+
+Sample Dataset Download Link- https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/datasets/input/tandt_db.zip
