@@ -1,0 +1,33 @@
+Package all your project files into a single .zip archive named GroupX_3dcv_project and upload it before 22nd November 2026
+Group Rules (Max 4 Members)
+* One Submission Per Group: Only one team member needs to upload the .zip file.
+* Member Contributions: Include a brief Author Contributions table or paragraph at the end of your report stating what each member worked on (e.g., data preparation, model implementation, 3D visualization, report writing).
+What to Include in the .zip File
+Organize your archive cleanly with the following structure:
+GroupX_3dcv_project/
+├── report.pdf # Project report formatted in standard IEEE double-column style
+├── demo.mp4 # 1–2 minute video showing your 3D outputs/renders
+├── README.md # Simple steps to install dependencies and run your code
+├── requirements.txt # Python packages needed (e.g., torch, open3d, numpy)
+├── code/ # All source code (training, evaluation, and model files)
+└── sample_data/ # 1–2 small test inputs so we can run a quick demo
+
+Project Report (report.pdf) — IEEE Format
+Format your report using the standard IEEE Conference double-column template (LaTeX or Word, 4–6 pages) and include these required sections in order:
+* Title & Author Block: Project title, followed by all group members' names, roll numbers/IDs, and emails.
+* I. Introduction: Brief background on the 3D computer vision topic and why it matters.
+* II. Problem Statement: Clear definition of the exact problem your project solves, including inputs and expected 3D outputs.
+* III. Literature Review: Summary of key existing methods/papers related to your task and their limitations.
+* IV. Objectives: Bulleted list of the specific technical goals your team set out to achieve.
+* V. Methodology: Your proposed pipeline, model architecture, 3D representations used (e.g., point clouds, meshes, voxels, NeRF/3DGS), loss functions, and datasets.
+* VI. Results and Discussion: Quantitative metrics (tables/graphs), visual comparisons of your 3D outputs, ablation/error analysis, and failure cases.
+* VII. Conclusion: Summary of your findings, current limitations, and potential future improvements.
+* References: Properly numbered IEEE-style citations ([1], [2], etc.) matching all in-text citations.
+Key Technical Rules
+* Keep it under 200 MB: Do not put large datasets or heavy model weights inside the .zip. Upload large weights to Google Drive or Hugging Face (set to "Anyone with the link can view") and paste the link in README.md.
+* No hardcoded paths: Use relative paths in your code so it runs on any computer without throwing file-not-found errors.
+* Credit outside code: If you built on an existing repository (e.g., Nerfstudio, 3D Gaussian Splatting, PointNet++), cite it in your report and note what you modified in README.md.
+Quick Check Before Submitting
+* Unzip your archive in a brand-new folder and run your code on sample_data/ using the steps in README.md.
+* Check that report.pdf strictly follows the IEEE two-column layout and has all 9 required elements above.
+* Verify that demo.mp4 plays properly and all group members are tagged on the portal.

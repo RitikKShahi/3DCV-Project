@@ -1,3 +1,17 @@
+# ==============================================================================
+# Git Ignore Configuration for 3D Computer Vision Project
+# ==============================================================================
+
+# Node / Vite dependencies & build artifacts
+node_modules/
+dist/
+build/
+.next/
+out/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
 # Python environments & caches
 .venv/
 venv/
@@ -7,41 +21,70 @@ __pycache__/
 *$py.class
 *.egg-info/
 .eggs/
-dist/
-build/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 
-# Local runtime data, uploads, checkpoints & outputs
+# Large Datasets, Models, and Archives (Strict Rule: Under 200MB)
+*.zip
+*.tar.gz
+*.tgz
+*.7z
+*.rar
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.db
+*.sqlite
+*.sqlite3
+truck.zip
+warm_truck.zip
+warm_dataset.zip
+public/downloads/
 /data/
 data/
 /output_*/
 output_*/
-*.db
-*.sqlite
-*.sqlite3
-*.ply
-*.splat
 benchmarks_results.json
-*.zip
-*.tar.gz
+
+# Keep small sample assets for quick demo
+!public/sample_splat.ply
+
+# Logs & temporary directories
 *.log
+.playwright-mcp/
+tmp/
+.tmp/
+temp/
+colmap_workspace/
 
-# Node / Next.js frontend build artifacts
-frontend/node_modules/
-frontend/.next/
-frontend/out/
-frontend/.env*.local
-npm-debug.log*
-yarn-debug.log*
-pnpm-debug.log*
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.toc
+*.synctex.gz
 
-# Environment & OS / IDE files
+# Environment, OS, and IDE files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 .env
 .env.*
 !.env.example
-.DS_Store
-Thumbs.db
 .vscode/
 .idea/
+*.sublime-project
+*.sublime-workspace
