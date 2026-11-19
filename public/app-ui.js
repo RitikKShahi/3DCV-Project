@@ -1004,7 +1004,7 @@
       landing.classList.remove("hidden");
     }
 
-    function loadIntoBrushEngine(url, isZip = false) {
+    function loadInto3DGSEngine(url, isZip = false) {
       showLoadingTransition(isZip ? "Unpacking dataset & configuring WebGPU... (6s)" : "Loading 3D Gaussian splats... (6s)");
 
       // Countdown updater over the 6 seconds
@@ -1053,7 +1053,7 @@
       const file = e.target.files?.[0];
       if (file) {
         const isZip = file.name.toLowerCase().endsWith(".zip");
-        loadIntoBrushEngine(URL.createObjectURL(file), isZip);
+        loadInto3DGSEngine(URL.createObjectURL(file), isZip);
       }
     });
 
@@ -1346,7 +1346,7 @@
         for (let i = 0; i < files.length; i++) {
           const l = files[i].name.toLowerCase();
           if (l.endsWith(".ply") || l.endsWith(".zip")) {
-            loadIntoBrushEngine(URL.createObjectURL(files[i]), l.endsWith(".zip"));
+            loadInto3DGSEngine(URL.createObjectURL(files[i]), l.endsWith(".zip"));
             return;
           }
         }
@@ -1357,7 +1357,7 @@
     document.getElementById("btn-enter-url")?.addEventListener("click", () => {
       const url = prompt("Enter model (.ply) or dataset (.zip) URL:", "http://127.0.0.1:3000/sample_splat.ply");
       if (url) {
-        loadIntoBrushEngine(url, url.toLowerCase().endsWith(".zip"));
+        loadInto3DGSEngine(url, url.toLowerCase().endsWith(".zip"));
       }
     });
 

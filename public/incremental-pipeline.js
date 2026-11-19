@@ -1,4 +1,4 @@
-// Incremental 3D Reconstruction Pipeline for Brush WebGPU Engine
+// Incremental 3D Reconstruction Pipeline for WebGPU 3DGS Engine
 // Offloads heavy ZIP reconstruction to local server endpoint so browser never freezes.
 
 (function() {
@@ -7,7 +7,7 @@
   // Global cache of latest trained model splats
   window.lastTrainedModelPly = null;
 
-  // Intercept anchor clicks when Brush exports a model
+  // Intercept anchor clicks when exporting a 3D model
   const originalAnchorClick = HTMLAnchorElement.prototype.click;
   HTMLAnchorElement.prototype.click = function() {
     if (this.download && this.download.endsWith(".ply") && this.href) {

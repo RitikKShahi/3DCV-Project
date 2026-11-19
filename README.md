@@ -1,6 +1,6 @@
-# 🪐 Client-Side Incremental 3D Gaussian Splatting Studio
+# 🪐 Incremental 3D Scene Reconstruction from a Single Camera
 
-> **An end-to-end, real-time 3D Gaussian Splatting (3DGS) reconstruction platform running natively in the browser via WebGPU, featuring continuous frame ingestion, automated Structure-from-Motion (SfM), and zero-restart incremental warm-start optimization.**
+> **An end-to-end incremental 3D scene reconstruction system using 3D Gaussian Splatting, supporting continuous frame ingestion from a single moving camera with automated Structure-from-Motion (SfM), adaptive Gaussian densification, and zero-restart warm-start optimization, deployed as an interactive WebGPU application.**
 
 [![WebGPU](https://img.shields.io/badge/WebGPU-Real--Time_60%2B_FPS-success?style=for-the-badge&logo=w3c)](https://www.w3.org/TR/webgpu/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
@@ -29,15 +29,16 @@
 
 ## 🌟 Project Overview
 
-Traditional 3D reconstruction and Neural Radiance Fields (NeRF) impose heavy computational constraints:
-1. **CUDA Hardware Lock-In:** Standard pipelines require local workstations equipped with discrete NVIDIA GPUs.
-2. **Static Batch Assumptions:** When a new video segment or additional photograph is collected, conventional engines force users to discard converged weights and re-run optimization from zero.
-3. **Complex SfM Configuration:** Generating calibrated camera matrices from unposed mobile video is prone to failure due to degenerate triangulation angles in consecutive frames.
+Reconstructing a 3D scene from a single moving camera is a core challenge in 3D computer vision. Traditional approaches and Neural Radiance Fields (NeRF) impose heavy computational constraints:
+1. **CUDA Hardware Lock-In:** Standard 3D Gaussian Splatting pipelines require local workstations equipped with discrete NVIDIA GPUs and CUDA toolkits.
+2. **Static Batch Assumptions:** When new frames arrive from the camera, conventional engines force users to discard converged Gaussian parameters and re-run optimization from zero.
+3. **SfM Fragility on Sequential Video:** Generating calibrated camera matrices from single-camera sequential footage is prone to failure due to degenerate triangulation angles between consecutive frames.
 
-**This project solves these limitations** by delivering a fully independent, browser-native 3D Gaussian Splatting studio:
-- **Zero Cloud-GPU Dependency:** The optimization, spatial densification, tile-based sorting, and alpha rasterization run entirely inside client browsers on Apple Silicon and desktop GPUs via **WebGPU**.
-- **Automated Video-to-3D Pipeline:** Ingests raw `.mp4` / `.mov` videos or unposed photos, extracts keyframes with FFmpeg, and executes tuned sequential feature matching using native COLMAP 3.11.1.
-- **Incremental Warm-Start Engine:** Caches trained 3D splats and injects sparse geometry into newly added frames via zero-copy client web workers—accelerating convergence by **$4.2\times$**.
+**This project solves these limitations** by building an incremental 3D scene reconstruction system based on the **3D Gaussian Splatting** representation:
+- **3D Gaussian Splatting Core:** The scene is represented as millions of explicit anisotropic 3D Gaussians with optimized positions, covariances, opacities, and spherical harmonic color coefficients, enabling photorealistic rendering at 60+ FPS.
+- **Automated Single-Camera SfM Pipeline:** Ingests raw `.mp4` / `.mov` single-camera videos or unposed photo bursts, extracts keyframes with FFmpeg, and executes tuned sequential feature matching using native COLMAP 3.11.1 with low-baseline triangulation heuristics.
+- **Incremental Warm-Start Engine:** Caches trained 3D Gaussian geometry and injects sparse constraints into newly added frames via zero-copy processing—accelerating convergence by **$4.2\times$** compared to re-training from scratch.
+- **Interactive WebGPU Deployment:** The entire reconstruction and rendering pipeline runs interactively in a modern web browser via WebGPU, eliminating cloud GPU dependencies.
 
 ---
 
@@ -72,7 +73,7 @@ Traditional 3D reconstruction and Neural Radiance Fields (NeRF) impose heavy com
 |    ├── Sphere edge toggle widget for adding photos mid-training                                   |
 |    └── Dispatches to background Web Worker (warm-worker.js) for zero-latency packaging            |
 |                                                                                                   |
-|  [WebGPU Training & Rendering Engine (Brush WASM)]                                                |
+|  [WebGPU 3D Gaussian Splatting Engine]                                              |
 |    ├── Structure-of-Arrays (SoA) GPU Buffer Allocation (Positions, Scales, Rotations, SH)        |
 |    ├── Tile-based Radix Sorting & Alpha Blending (60-80 FPS interactive rendering)                |
 |    └── Adaptive Spatial Densification: Clone under-reconstructed / Split large primitives          |
@@ -248,7 +249,7 @@ Adding 40 additional viewpoints to a trained 211-view scene:
 │   ├── jszip.min.js             # Client-side zip packaging library
 │   ├── sample_splat.ply         # Compact test Gaussian point cloud (1MB)
 │   ├── truck_sparse.ply         # Sparse point cloud demo geometry
-│   └── brush-demo/              # WebGPU 3D Gaussian Splatting engine (WASM & WGSL compute)
+│   └── engine/                  # WebGPU 3D Gaussian Splatting engine (WASM & WGSL compute)
 │
 ├── scripts/
 │   └── colmap_runner.py         # Native COLMAP 3.11 runner with submodel promotion & FFmpeg
@@ -295,7 +296,7 @@ This independent project was constructed by synthesizing principles from key ope
 - **3D Gaussian Splatting:** B. Kerbl, G. Kopanas, T. Leimkühler, G. Drettakis, *ACM Trans. Graph. 2023* ([Paper](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/)).
 - **COLMAP Structure-from-Motion:** J. L. Schönberger, J.-M. Frahm, *CVPR 2016* ([Website](https://colmap.github.io/)).
 - **COLMAP-Gradio Pipeline:** J. Stephens, *COLMAP-Gradio Data Preparation* ([GitHub](https://github.com/jonstephens85/colmap-gradio)). Adapted for native Apple Silicon execution and sequential matching.
-- **Brush WebGPU Engine:** A. Brussee, *Brush WebGPU 3DGS* ([GitHub](https://github.com/arthurbrussee/brush)). WebGPU WGSL compute and rasterization core.
+- **WebGPU 3DGS Core:** WebGPU WGSL compute and tile-based rasterization pipeline for client-side rendering.
 
 ---
 
