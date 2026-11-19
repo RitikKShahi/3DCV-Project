@@ -223,6 +223,15 @@ To incorporate additional photos without discarding hours of previous optimizati
     \item \textbf{Zero-Copy Web Worker:} \texttt{warm-worker.js} utilizes JSZip with \texttt{STORE} compression mode (zero re-compression overhead) to inject converged 3D points directly into the new dataset archive. Optimization resumes seamlessly from iteration $T_{\text{checkpoint}}$ rather than zero.
 \end{enumerate}
 
+\subsection{Attribution and Software Credits}
+In accordance with project guidelines on crediting foundational software, our system builds upon and extends several open-source tools:
+\begin{enumerate}
+    \item \textbf{3D Gaussian Splatting \cite{kerbl20233d}:} We build upon the mathematical formulation of 3D Gaussian primitives, 2D EWA volume splatting \cite{zwicker2001ewa}, and tile-based rasterization. Whereas the reference implementation requires offline CUDA C++ binaries, our system re-engineers the pipeline for cross-platform WebGPU WGSL compute and rasterization shaders.
+    \item \textbf{Structure-from-Motion (COLMAP) \cite{schonberger2016sfm, schonberger2016mvs}:} We utilize native COLMAP 3.11.1 for SIFT feature extraction, sequential matching, and bundle adjustment. However, standard COLMAP configurations fail on continuous monocular video due to strict triangulation thresholds. We heavily customize the pipeline by designing video-tuned triangulation parameters ($\text{init\_min\_tri\_angle}=4.0^\circ$, inliers$=25$) and implementing an automated submodel camera promotion algorithm that inspects binary headers to extract the optimal reconstruction.
+    \item \textbf{COLMAP-Gradio Data Pipeline \cite{stephens2024colmap}:} We adapt conceptual ideas of automated video frame extraction and image scaling from COLMAP-Gradio, migrating them from desktop Gradio scripts into a headless asynchronous Node/Vite backend service with real-time Server-Sent Events (SSE) telemetry.
+\end{enumerate}
+All subsequent components—including the incremental warm-start geometry injector (\texttt{warm-worker.js}), client-side state caching (\texttt{incremental-pipeline.js}), the interactive 3-card landing dashboard, and real-time WebGPU training orchestration—were designed and implemented novelly for this project.
+
 \section{Results and Discussion}
 
 \subsection{Experimental Setup}

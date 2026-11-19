@@ -22,7 +22,7 @@
 - [Quantitative Benchmarks](#-quantitative-benchmarks)
 - [Project Directory Structure](#-project-directory-structure)
 - [IEEE Project Report](#-ieee-project-report)
-- [Attribution & Prior Art](#-attribution--prior-art)
+- [Outside Codebase Credits & Modifications](#-outside-codebase-credits--modifications)
 - [Author Contributions](#-author-contributions)
 
 ---
@@ -290,13 +290,40 @@ cd report/
 
 ---
 
-## 📚 Attribution & Prior Art
+## 🧩 Outside Codebase Credits & Modifications
 
-This independent project was constructed by synthesizing principles from key open-source research:
-- **3D Gaussian Splatting:** B. Kerbl, G. Kopanas, T. Leimkühler, G. Drettakis, *ACM Trans. Graph. 2023* ([Paper](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/)).
-- **COLMAP Structure-from-Motion:** J. L. Schönberger, J.-M. Frahm, *CVPR 2016* ([Website](https://colmap.github.io/)).
-- **COLMAP-Gradio Pipeline:** J. Stephens, *COLMAP-Gradio Data Preparation* ([GitHub](https://github.com/jonstephens85/colmap-gradio)). Adapted for native Apple Silicon execution and sequential matching.
-- **WebGPU 3DGS Core:** WebGPU WGSL compute and tile-based rasterization pipeline for client-side rendering.
+In accordance with course project guidelines regarding crediting outside code, this system builds upon and extends several open-source foundational repositories:
+
+### 1. 3D Gaussian Splatting for Real-Time Radiance Field Rendering
+- **Authors:** B. Kerbl, G. Kopanas, T. Leimkühler, G. Drettakis (*ACM Transactions on Graphics / SIGGRAPH 2023*)
+- **Original Repository:** [graphdeco-inria/gaussian-splatting](https://github.com/graphdeco-inria/gaussian-splatting)
+- **What We Used:** The mathematical formulation of 3D Gaussian primitives, covariance parameterization via scaling and quaternions, 2D EWA screen-space projection, and front-to-back volumetric alpha blending.
+- **What We Modified & Extended:**
+  - **Zero CUDA Dependency:** Re-engineered the training and rasterization passes into cross-platform WebGPU compute shaders (WGSL) running natively in modern web browsers, eliminating proprietary NVIDIA hardware lock-in.
+  - **Continuous Incremental Training:** Replaced the static, offline batch optimizer with an incremental warm-start engine that allows new camera observations to be incorporated dynamically without restarting optimization from iteration 0.
+
+### 2. COLMAP Structure-from-Motion
+- **Authors:** J. L. Schönberger, J.-M. Frahm (*CVPR 2016*, *ECCV 2016*)
+- **Original Repository:** [colmap/colmap](https://github.com/colmap/colmap)
+- **What We Used:** SIFT feature extraction, sequential two-view verification, and incremental bundle adjustment for camera pose estimation and sparse point cloud generation.
+- **What We Modified & Extended:**
+  - **Video Trajectory Tuning:** Overrode default strict triangulation thresholds (`--Mapper.init_min_tri_angle 4.0`, `--Mapper.init_min_num_inliers 25`, `--Mapper.abs_pose_min_num_inliers 12`) to successfully reconstruct handheld monocular video footage that previously failed in standard COLMAP.
+  - **Submodel Camera Promotion Algorithm:** Developed an automated Python parser (`scripts/colmap_runner.py`) that unpacks binary `images.bin` headers across all fragmented submodels (`sparse/0`, `sparse/1`, etc.) and automatically promotes the largest model with maximum registered camera views to `sparse/0/`, eliminating the common "2-camera false start" bug.
+
+### 3. COLMAP-Gradio Automated Ingestion Pipeline
+- **Author:** Jon Stephens (2024)
+- **Original Repository:** [jonstephens85/colmap-gradio](https://github.com/jonstephens85/colmap-gradio)
+- **What We Used:** Concepts for automated image scaling (1600px longest dimension) and sequential matching overlap windows.
+- **What We Modified & Extended:**
+  - **Headless Vite Backend Service:** Completely re-implemented from desktop Gradio scripts into a lightweight Node/Vite backend endpoint (`/api/colmap/process`).
+  - **Real-Time Streaming Telemetry:** Integrated Server-Sent Events (SSE) streaming real-time COLMAP terminal logs and multi-stage progress bars directly to the client browser UI.
+  - **Flexible Frame Extraction:** Implemented customizable FFmpeg frame extraction rates (2.0, 5.0, 10.0 FPS) tuned for handheld camera tours.
+
+### 4. Novel Components Built From Scratch for This Project
+- **Interactive Ingestion Landing Page (`public/app-ui.js`):** Sleek 3-card hub supporting pre-calibrated ZIP archives, monocular video recordings, and unposed photo bursts with a smooth 6-second WebGPU loading transition.
+- **Incremental State Fusion Engine (`public/incremental-pipeline.js`):** Client-side state manager that intercepts model checkpoints (`.ply` exports) and fuses active 3D geometry with newly arriving camera observations.
+- **Zero-Copy Web Worker (`public/warm-worker.js`):** Background worker utilizing `JSZip` in `STORE` mode to inject converged 3D Gaussian geometry into new dataset packages in under 1 second without blocking the UI thread.
+- **Floating Sphere Edge Widget:** Minimalist floating toggle widget attached to the screen edge allowing users to add photos mid-reconstruction without interrupting active training.
 
 ---
 
