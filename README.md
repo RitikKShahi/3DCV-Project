@@ -304,16 +304,8 @@ This independent project was constructed by synthesizing principles from key ope
 
 | Member Name | Roll Number / ID | Email | Core Responsibilities |
 | :--- | :--- | :--- | :--- |
-| **Ritik Kumar Shahi** | `2021UG1001` | `ritikshahi071@gmail.com` | WebGPU compute architecture, automated COLMAP 3.11 runner, submodel camera promotion algorithm, warm-start state manager, and IEEE report. |
-| **Team Member 2** | `2021UGXXXX` | `member2@institute.ac.in` | Modern 3-card landing hub UI, WebGPU transition timers, video ingestion interface, and JSZip web worker integration. |
-| **Team Member 3** | `2021UGYYYY` | `member3@institute.ac.in` | Benchmark experiments, dataset quantitative evaluation (Truck, Garden), metric collection, and failure case analysis. |
-
----
-
-## 📜 Submission Checklist
-- [x] Strict `.gitignore` applied (excludes node_modules, temp files, and large binary ZIPs over 200MB)
-- [x] Full IEEE Conference double-column LaTeX document (`report/report.tex` & `report/IEEEtran.cls`)
-- [x] Detailed, interactive `README.md` with system architecture, math, benchmarks, and quick start guide
-- [x] Sample data preserved for quick evaluation (`public/sample_splat.ply`)
-- [x] Relative paths verified throughout all client and server code
-- [x] Complete codebase committed and pushed to git remote
+| **Pratyush Kumar** | `23BCS099` | `23bcs099@iiitdwd.ac.in` | Structure-from-Motion pipeline, video keyframe extraction and SIFT feature matching algorithms, parameter tuning for low-baseline single camera video. |
+| **Rishabh Verma** | `23BCS107` | `23bcs107@iiitdwd.ac.in` | Incremental warm-start geometry integration, zero-copy JSZip web worker implementation, dataset state packaging. |
+| **Ritik Kumar Shahi** | `23BCS110` | `23bcs110@iiitdwd.ac.in` | WebGPU 3DGS compute architecture, automated COLMAP 3.11 runner, submodel camera promotion algorithm, warm-start state manager, and IEEE report. |
+| **Jayeshwar Pratap Singh Tanwar** | `23BEC023` | `23bec023@iiitdwd.ac.in` | Interactive user interface dashboard, camera trajectory and frustum visualization, WebGPU scene navigation controls. |
+| **Harsh Raj** | `23BDS076` | `23bds076@iiitdwd.ac.in` | Benchmark experiments, quantitative metrics evaluation (PSNR, SSIM, FPS), ablation studies, and error analysis across datasets. |
