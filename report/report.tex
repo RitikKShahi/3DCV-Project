@@ -31,13 +31,30 @@
 }
 
 \author{
-\IEEEauthorblockN{Pratyush Kumar\IEEEauthorrefmark{1}, Rishabh Verma\IEEEauthorrefmark{2}, Ritik Kumar Shahi\IEEEauthorrefmark{3}, Jayeshwar Pratap Singh Tanwar\IEEEauthorrefmark{4}, Harsh Raj\IEEEauthorrefmark{5}}
-\IEEEauthorblockA{\textit{Indian Institute of Information Technology Dharwad, Karnataka, India}\\
-Email: \IEEEauthorrefmark{1}23bcs099@iiitdwd.ac.in,
-\IEEEauthorrefmark{2}23bcs107@iiitdwd.ac.in,
-\IEEEauthorrefmark{3}23bcs110@iiitdwd.ac.in,
-\IEEEauthorrefmark{4}23bec023@iiitdwd.ac.in,
-\IEEEauthorrefmark{5}23bds076@iiitdwd.ac.in}
+\IEEEauthorblockN{Pratyush Kumar}
+\IEEEauthorblockA{\textit{Roll No: 23BCS099}\\
+\textit{IIIT Dharwad}\\
+23bcs099@iiitdwd.ac.in}
+\and
+\IEEEauthorblockN{Rishabh Verma}
+\IEEEauthorblockA{\textit{Roll No: 23BCS107}\\
+\textit{IIIT Dharwad}\\
+23bcs107@iiitdwd.ac.in}
+\and
+\IEEEauthorblockN{Ritik Kumar Shahi}
+\IEEEauthorblockA{\textit{Roll No: 23BCS110}\\
+\textit{IIIT Dharwad}\\
+23bcs110@iiitdwd.ac.in}
+\and
+\IEEEauthorblockN{Jayeshwar P. S. Tanwar}
+\IEEEauthorblockA{\textit{Roll No: 23BEC023}\\
+\textit{IIIT Dharwad}\\
+23bec023@iiitdwd.ac.in}
+\and
+\IEEEauthorblockN{Harsh Raj}
+\IEEEauthorblockA{\textit{Roll No: 23BDS076}\\
+\textit{IIIT Dharwad}\\
+23bds076@iiitdwd.ac.in}
 }
 
 \maketitle
@@ -67,12 +84,27 @@ Despite its impressive performance, existing 3DGS pipelines exhibit significant 
 To overcome these challenges, this project introduces an incremental 3D scene reconstruction system built on the 3D Gaussian Splatting representation. By combining automated Structure-from-Motion with video-tuned parameters, an adaptive Gaussian densification engine, and a persistent warm-start geometric state manager, our system enables continuous reconstruction from a single camera with real-time interactive visualization via WebGPU.
 
 \section{Problem Statement}
-Given a single moving camera capturing an incoming stream of unposed visual data—comprising either an initial sparse set of photographs $\mathcal{I}_0 = \{I_1, \dots, I_N\}$ or a continuous sequential video sequence $V(t)$—the primary objective is to reconstruct an explicit, photorealistic 3D scene representation $\mathcal{G} = \{G_i\}_{i=1}^M$ using 3D Gaussian Splatting that supports:
-\begin{enumerate}
-    \item \textbf{Real-Time Rendering:} Rendering arbitrary novel viewpoints $\mathbf{P} = [\mathbf{R} \mid \mathbf{t}]$ at interactive rates ($\ge 60$ FPS) at display resolutions, enabling the user to freely explore the reconstructed scene while training continues.
-    \item \textbf{Continuous Ingestion:} Incorporating newly acquired viewpoints $\mathcal{I}_{\text{new}} = \{I_{N+1}, \dots, I_{N+K}\}$ from the same camera into the active scene $\mathcal{G}$ incrementally, preserving previously converged geometry without catastrophic degradation or full re-optimization.
-    \item \textbf{Automated Camera Calibration:} Automatically estimating camera intrinsics and extrinsics from unposed single-camera imagery via Structure-from-Motion, with robustness to the small inter-frame baselines typical of handheld video.
-\end{enumerate}
+The objective of this project is to solve the problem of real-time, online 3D scene reconstruction from continuous visual observations captured by a single moving monocular camera, without requiring offline batch pre-processing or cloud GPU infrastructure.
+
+\subsubsection{System Inputs}
+The input to the system consists of sequential, uncalibrated visual data captured by a single moving camera:
+\begin{itemize}
+    \item \textbf{Continuous Video Stream / Recording:} A monocular video file $V(t)$ (in \texttt{.mp4} or \texttt{.mov} format) recorded from a moving camera, characterized by small inter-frame baselines and continuous motion.
+    \item \textbf{Unposed Multi-View Photo Batches:} An initial collection $\mathcal{I}_0 = \{I_1, \dots, I_N\}$ followed by sequentially arriving incremental batches $\mathcal{I}_{\text{new}} = \{I_{N+1}, \dots, I_{N+K}\}$ from arbitrary angles.
+    \item \textbf{Pre-calibrated Scene Archives:} Calibrated datasets with camera intrinsics and extrinsics (COLMAP or NeRF formats).
+\end{itemize}
+
+\subsubsection{Expected 3D Outputs}
+The output produced by the system is an explicit, interactive 3D representation:
+\begin{itemize}
+    \item \textbf{3D Gaussian Scene $\mathcal{G} = \{G_i\}_{i=1}^M$:} An explicit set of millions of 3D Gaussian primitives parameterized by 3D centroids $\boldsymbol{\mu}_i$, anisotropic covariances $\boldsymbol{\Sigma}_i$, opacities $\sigma_i$, and view-dependent color coefficients (Spherical Harmonics).
+    \item \textbf{Calibrated Camera Poses:} Estimated camera trajectory $\mathbf{P}_t = [\mathbf{R}_t \mid \mathbf{t}_t]$ and intrinsics $\mathbf{K}$ in a consistent global coordinate frame.
+    \item \textbf{Real-Time Novel View Synthesis:} Interactive rendering at $\ge 60$ FPS from arbitrary user-controlled virtual viewpoints.
+    \item \textbf{Standard 3D Export:} Exportable Gaussian point cloud in standard \texttt{.ply} format containing converged geometry and radiance parameters.
+\end{itemize}
+
+\subsubsection{Key Challenges}
+The pipeline must maintain geometric consistency as new frames are ingested, prevent catastrophic forgetting in previously observed regions, and execute all rasterization and gradient optimization within the memory and compute bounds of client hardware via WebGPU.
 
 \begin{figure*}[t]
 \centering
@@ -259,10 +291,25 @@ Error analysis reveals specific boundary conditions:
     \item \textbf{Browser Memory Caps:} WebGPU limits buffer allocations to the hardware-reported \texttt{maxStorageBufferBindingSize} (typically 128 MB to 1 GB), necessitating splat count budgets of approximately $1.5 \times 10^6$ primitives on mobile browsers.
 \end{enumerate}
 
-\section{Conclusion and Future Work}
-In this project, we developed an incremental 3D scene reconstruction system from a single camera based on the 3D Gaussian Splatting representation. By combining an automated COLMAP Structure-from-Motion pipeline with video-tuned triangulation parameters and submodel camera promotion, an adaptive Gaussian densification engine, and a zero-copy incremental warm-start architecture, our system enables continuous reconstruction as new frames arrive from the camera without restarting optimization. The system is deployed as an interactive WebGPU application for real-time visualization. Our experiments confirm that the system delivers 60+ FPS rendering, achieves 31.42 dB PSNR on standard benchmarks, and accelerates sequential ingestion by $4.2\times$ compared to full re-training.
+\section{Conclusion}
+\subsection{Summary of Findings}
+In this project, we presented an incremental 3D scene reconstruction system designed for single-camera capture using 3D Gaussian Splatting as the core geometric representation. By coupling an automated Structure-from-Motion pipeline (COLMAP 3.11.1) tuned for small-baseline video trajectories with an optimal submodel camera promotion algorithm, our system reliably recovers camera trajectories and sparse point clouds from uncalibrated footage. Furthermore, our incremental warm-start architecture leverages cached 3D Gaussian geometry and zero-copy worker packaging to integrate newly arriving frames without restarting optimization from zero. Benchmark evaluations confirm that the platform delivers photorealistic novel view synthesis (31.42 dB PSNR on standard benchmarks), achieves interactive rendering rates exceeding 60 FPS, and accelerates continuous frame convergence by $4.2\times$ over full re-training.
 
-Future work includes integrating real-time visual-inertial odometry (VIO) for instant online camera tracking in mobile browsers, implementing Level-of-Detail (LoD) octree streaming for city-scale environments, and exploring dynamic 4D Gaussian deformation fields.
+\subsection{Current Limitations}
+Despite its strong empirical performance, the current system exhibits several limitations:
+\begin{enumerate}
+    \item \textbf{Motion Blur Vulnerability:} Rapid rotational camera motion or rolling-shutter distortion degrades SIFT feature correspondences, which can lead to disconnected reconstruction submodels.
+    \item \textbf{Hardware Buffer Limits:} Memory limits imposed by browser WebGPU backends (\texttt{maxStorageBufferBindingSize}) restrict Gaussian primitive budgets to approximately $1.5 \times 10^6$ splats on mobile and consumer devices.
+    \item \textbf{Monocular Scale Ambiguity:} Pure monocular vision lacks absolute metric scale, requiring consistent scale normalization during incremental state updates.
+\end{enumerate}
+
+\subsection{Potential Future Improvements}
+Promising directions for future development include:
+\begin{itemize}
+    \item \textbf{Visual-Inertial Odometry (VIO):} Incorporating device IMU readings (accelerometer and gyroscope) to provide metric scale and real-time camera tracking during rapid movements.
+    \item \textbf{Hierarchical Level-of-Detail (LoD):} Structuring Gaussians into hierarchical octrees to stream and reconstruct large-scale environments within memory constraints.
+    \item \textbf{Dynamic 4D Deformation Fields:} Extending the static 3DGS formulation with temporal deformation networks to support non-rigid and dynamic objects in the scene.
+\end{itemize}
 
 \section*{Author Contributions}
 \begin{table}[htbp]
