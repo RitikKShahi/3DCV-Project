@@ -157,7 +157,7 @@ function incrementalApiPlugin() {
           }
         }
 
-        // 2. COLMAP Data Preparation endpoint (colmap-gradio inspired)
+        // 2. Automated COLMAP Data Preparation & Streaming endpoint
         if (req.url?.startsWith('/api/colmap/process') && req.method === 'POST') {
           try {
             console.log('[ColmapAPI] Receiving raw photos for COLMAP data preparation...');

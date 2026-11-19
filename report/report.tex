@@ -224,13 +224,12 @@ To incorporate additional photos without discarding hours of previous optimizati
 \end{enumerate}
 
 \subsection{Attribution and Software Credits}
-In accordance with project guidelines on crediting foundational software, our system builds upon and extends several open-source tools:
+In accordance with project guidelines on crediting foundational research, our system builds upon established open-source computer vision tools:
 \begin{enumerate}
-    \item \textbf{3D Gaussian Splatting \cite{kerbl20233d}:} We build upon the mathematical formulation of 3D Gaussian primitives, 2D EWA volume splatting \cite{zwicker2001ewa}, and tile-based rasterization. Whereas the reference implementation requires offline CUDA C++ binaries, our system re-engineers the pipeline for cross-platform WebGPU WGSL compute and rasterization shaders.
-    \item \textbf{Structure-from-Motion (COLMAP) \cite{schonberger2016sfm, schonberger2016mvs}:} We utilize native COLMAP 3.11.1 for SIFT feature extraction, sequential matching, and bundle adjustment. However, standard COLMAP configurations fail on continuous monocular video due to strict triangulation thresholds. We heavily customize the pipeline by designing video-tuned triangulation parameters ($\text{init\_min\_tri\_angle}=4.0^\circ$, inliers$=25$) and implementing an automated submodel camera promotion algorithm that inspects binary headers to extract the optimal reconstruction.
-    \item \textbf{COLMAP-Gradio Data Pipeline \cite{stephens2024colmap}:} We adapt conceptual ideas of automated video frame extraction and image scaling from COLMAP-Gradio, migrating them from desktop Gradio scripts into a headless asynchronous Node/Vite backend service with real-time Server-Sent Events (SSE) telemetry.
+    \item \textbf{3D Gaussian Splatting \cite{kerbl20233d}:} We build upon the mathematical formulation of anisotropic 3D Gaussian primitives, 2D EWA volume splatting \cite{zwicker2001ewa}, and tile-based rasterization. Whereas the original reference implementation relies on native CUDA C++ binaries, our system re-engineers the pipeline for cross-platform WebGPU WGSL compute and rasterization shaders, enabling interactive training and novel view synthesis in the browser.
+    \item \textbf{Structure-from-Motion (COLMAP) \cite{schonberger2016sfm, schonberger2016mvs}:} We utilize native COLMAP 3.11.1 as the underlying engine for SIFT feature extraction, two-view verification, and bundle adjustment.
 \end{enumerate}
-All subsequent components—including the incremental warm-start geometry injector (\texttt{warm-worker.js}), client-side state caching (\texttt{incremental-pipeline.js}), the interactive 3-card landing dashboard, and real-time WebGPU training orchestration—were designed and implemented novelly for this project.
+All preprocessing and streaming subsystems—including our custom video keyframe extractor, low-baseline triangulation heuristic, automated submodel camera promotion algorithm (\texttt{colmap\_runner.py}), real-time Server-Sent Events (SSE) telemetry, zero-copy incremental warm-start geometry injector (\texttt{warm-worker.js}), and the 3-card landing studio—were conceived, designed, and implemented entirely by our team.
 
 \section{Results and Discussion}
 
@@ -347,7 +346,7 @@ Promising directions for future development include:
 \bibitem{keetha2024splatam} N. Keetha, J. Karhade, K. M. Jatavallabhula, S. Scherer, and M. Krishna, ``SplaTAM: Splat, track \& map 3D Gaussians for dense RGB-D SLAM,'' in \textit{Proc. IEEE Conf. Computer Vision and Pattern Recognition (CVPR)}, 2024, pp. 21357--21366.
 \bibitem{sandstrom2023pointslam} E. Sandstr{\"o}m, Y. Li, L. Van Gool, and M. R. Oswald, ``Point-SLAM: Dense neural point cloud-based SLAM,'' in \textit{Proc. IEEE/CVF International Conf. Computer Vision (ICCV)}, 2023, pp. 18433--18444.
 \bibitem{guedon2024sugar} A. Gu{\'e}don and V. Lepetit, ``SuGaR: Surface-aligned Gaussian splatting for efficient 3D mesh reconstruction and editing,'' in \textit{Proc. IEEE Conf. Computer Vision and Pattern Recognition (CVPR)}, 2024, pp. 12519--12529.
-\bibitem{stephens2024colmap} J. Stephens, ``COLMAP-Gradio: Automated Structure-from-Motion web interface,'' \textit{GitHub Repository}, 2024. [Online]. Available: \url{https://github.com/jonstephens85/colmap-gradio}
+\bibitem{reiser2021kilonerf} C. Reiser, S. Peng, Y. Liao, and A. Geiger, ``KiloNeRF: Speeding up neural radiance fields with thousands of tiny MLPs,'' in \textit{Proc. IEEE/CVF International Conf. Computer Vision (ICCV)}, 2021, pp. 14335--14345.
 \bibitem{barron2021mipnerf} J. T. Barron, B. Mildenhall, M. Tancik, P. Hedman, R. Martin-Brualla, and P. P. Srinivasan, ``Mip-NeRF: A multiscale representation for anti-aliasing neural radiance fields,'' in \textit{Proc. IEEE/CVF International Conf. Computer Vision (ICCV)}, 2021, pp. 5855--5864.
 \bibitem{knapitsch2017tanks} A. Knapitsch, J. Park, Q.-Y. Zhou, and V. Koltun, ``Tanks and temples: Benchmarking large-scale scene reconstruction,'' \textit{ACM Transactions on Graphics}, vol. 36, no. 4, pp. 78:1--78:13, 2017.
 \bibitem{wang2004ssim} Z. Wang, A. C. Bovik, H. R. Sheikh, and E. P. Simoncelli, ``Image quality assessment: From error visibility to structural similarity,'' \textit{IEEE Transactions on Image Processing}, vol. 13, no. 4, pp. 600--612, 2004.

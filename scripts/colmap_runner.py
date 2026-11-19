@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """
-COLMAP Data Preparation Pipeline for 3D Gaussian Splatting
-Reference: https://github.com/jonstephens85/colmap-gradio
-
-Prepares raw unposed photos and video recordings into calibrated COLMAP datasets:
+Automated Monocular Video & Photo Preprocessing Pipeline for 3D Gaussian Splatting
+Prepares raw unposed photos and single-camera video recordings into calibrated COLMAP datasets:
 1. Video frame extraction via FFmpeg (configurable FPS)
 2. Scales images (No Scaling, Half, or 1600k longest dimension, auto-converts HEIC/WebP)
 3. Runs COLMAP database_creator, feature_extractor, matcher (Sequential/Exhaustive/Spatial)

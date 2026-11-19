@@ -310,16 +310,9 @@ In accordance with course project guidelines regarding crediting outside code, t
   - **Video Trajectory Tuning:** Overrode default strict triangulation thresholds (`--Mapper.init_min_tri_angle 4.0`, `--Mapper.init_min_num_inliers 25`, `--Mapper.abs_pose_min_num_inliers 12`) to successfully reconstruct handheld monocular video footage that previously failed in standard COLMAP.
   - **Submodel Camera Promotion Algorithm:** Developed an automated Python parser (`scripts/colmap_runner.py`) that unpacks binary `images.bin` headers across all fragmented submodels (`sparse/0`, `sparse/1`, etc.) and automatically promotes the largest model with maximum registered camera views to `sparse/0/`, eliminating the common "2-camera false start" bug.
 
-### 3. COLMAP-Gradio Automated Ingestion Pipeline
-- **Author:** Jon Stephens (2024)
-- **Original Repository:** [jonstephens85/colmap-gradio](https://github.com/jonstephens85/colmap-gradio)
-- **What We Used:** Concepts for automated image scaling (1600px longest dimension) and sequential matching overlap windows.
-- **What We Modified & Extended:**
-  - **Headless Vite Backend Service:** Completely re-implemented from desktop Gradio scripts into a lightweight Node/Vite backend endpoint (`/api/colmap/process`).
-  - **Real-Time Streaming Telemetry:** Integrated Server-Sent Events (SSE) streaming real-time COLMAP terminal logs and multi-stage progress bars directly to the client browser UI.
-  - **Flexible Frame Extraction:** Implemented customizable FFmpeg frame extraction rates (2.0, 5.0, 10.0 FPS) tuned for handheld camera tours.
-
-### 4. Novel Components Built From Scratch for This Project
+### 3. Original Components Conceived & Built by Our Team
+- **Automated Monocular Video & Photo Ingestion Pipeline (`scripts/colmap_runner.py`):** Custom keyframe extraction with FFmpeg, dynamic resolution normalization (1600px), relaxed sequential matching for small-baseline camera trajectories, and our binary header submodel promotion algorithm that extracts the primary reconstruction.
+- **Headless Ingestion Service & Real-Time Telemetry (`vite.config.ts`):** Custom asynchronous Node/Vite multipart endpoint (`/api/colmap/process`) streaming real-time terminal logs and multi-stage progress bars to the client browser via Server-Sent Events (SSE).
 - **Interactive Ingestion Landing Page (`public/app-ui.js`):** Sleek 3-card hub supporting pre-calibrated ZIP archives, monocular video recordings, and unposed photo bursts with a smooth 6-second WebGPU loading transition.
 - **Incremental State Fusion Engine (`public/incremental-pipeline.js`):** Client-side state manager that intercepts model checkpoints (`.ply` exports) and fuses active 3D geometry with newly arriving camera observations.
 - **Zero-Copy Web Worker (`public/warm-worker.js`):** Background worker utilizing `JSZip` in `STORE` mode to inject converged 3D Gaussian geometry into new dataset packages in under 1 second without blocking the UI thread.

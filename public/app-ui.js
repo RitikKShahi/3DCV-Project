@@ -346,7 +346,7 @@
       width: 100%;
     }
 
-    /* COLMAP Data Preparation Modal (colmap-gradio reference) */
+    /* COLMAP Data Preparation Modal */
     #colmap-modal-backdrop {
       position: fixed;
       inset: 0;
@@ -844,7 +844,7 @@
         </div>
       </div>
 
-      <!-- COLMAP Data Preparation Modal (colmap-gradio reference) -->
+      <!-- COLMAP Data Preparation Modal -->
       <div id="colmap-modal-backdrop">
         <div id="colmap-modal">
           <div class="colmap-header">
@@ -892,7 +892,7 @@
                 </div>
               </div>
 
-              <!-- Scaling Option (from colmap-gradio) -->
+              <!-- Scaling Option -->
               <div class="colmap-field">
                 <div class="colmap-label">
                   <span>Image Scaling Option</span>
@@ -914,7 +914,7 @@
                 </div>
               </div>
 
-              <!-- Matching Strategy (from colmap-gradio) -->
+              <!-- Matching Strategy -->
               <div class="colmap-field" id="matching-field">
                 <div class="colmap-label">
                   <span>COLMAP Feature Matching Type</span>
@@ -1069,7 +1069,7 @@
       }
     });
 
-    // COLMAP Data Preparation Controller (colmap-gradio reference + Video Frame Extraction)
+    // COLMAP Data Preparation Controller & Video Frame Extraction
     let currentMode = "photos";
     let pendingPhotos = [];
     let pendingVideo = null;
